@@ -40,6 +40,7 @@ int main(){
 void menu(){
 	int dato, opcion, cont = 0;
 	do{
+		nivelArbol = 0;
 		cout<<"\tMENU: "<<endl;
 		cout<<"1. Insertar un nuevo nodo "<<endl;
 		cout<<"2. Mostrar el arbol completo"<<endl;
@@ -105,6 +106,7 @@ void menu(){
 				cout<<"Mostrar el arobl de manera descendente: "<<endl;
 				descendente(arbol);
 				cout<<endl;
+				system("pause");
 				break;
 			case 9:
 				cout<<"Buscar el mayor valor del arbol: "<<endl;
@@ -238,14 +240,14 @@ void ascendente(Nodo *arbol){
 		
 	}
 }
-void descendente(Nodo *){
+void descendente(Nodo *arbol){
 	if(arbol == NULL){
 		return;
 	}	
 	else{
-		ascendente(arbol->der);
+		descendente(arbol->der);
 		cout<<arbol->dato<<" - ";
-		ascendente(arbol->izq);
+		descendente(arbol->izq);
 		
 	}
 }
