@@ -22,6 +22,7 @@ struct Nodo{
 	Nodo *padre;
 };
 Nodo *arbol = NULL;
+Nodo *hoja = NULL;
 
 //declaring global variables
 int nivelArbol = 0;
@@ -55,6 +56,7 @@ void reemplazar(Nodo *, Nodo *);
 void destruirNodo (Nodo *);
 
 int main(){
+	system("color a");
 	menu();
 	
 	return 0;
@@ -62,7 +64,7 @@ int main(){
 
 //funcion de menú
 void menu(){
-	system("color a");
+	
 	int dato, opcion, cont = 0;
 	do{
 		nivelArbol = 0;
@@ -85,7 +87,7 @@ void menu(){
 		cout<<"12. Al recorrer el arbol cuantas LLAMADAS RECURSIVAS"<<endl;
 		cout<<"13. SUMAR y halllar el PROMEDIO"<<endl;
 		cout<<"14. Al recorrer el arbol cuantas PARADAS hay"<<endl;
-		cout<<"15. ELIMINAR un nodo de un arbol"<<endl;
+		cout<<"15. ELIMINAR un nodo del arbol"<<endl;
 		cout<<"18. Salir"<<endl;
 		cin>>opcion;
 		switch(opcion){
@@ -391,15 +393,19 @@ void eliminarNodo(Nodo *arbol, int n){
 	if(arbol == NULL){
 		return ;
 	}
+	else if(n == arbol->dato){
+		//cout<<endl<<"Se encuentra en nodo a eliminar"<<endl;
+		eliminar(arbol);
+	}
 	else if(n < arbol->dato){
+		//cout<<endl<<"Se busca el lado izquierdo"<<endl;
 		eliminarNodo(arbol->izq, n);
 	}
 	else if(n > arbol->dato){
+		//cout<<endl<<"Se busca en el lado derecho"<<endl;
 		eliminarNodo(arbol->der, n);
 	}
-	else if(n == arbol->dato){
-		eliminar(arbol);
-	}
+	
 }
 
 //funcion para hallar el minimo elemento
@@ -419,14 +425,14 @@ Nodo *minimo (Nodo *arbol){
 void reemplazar(Nodo *arbol, Nodo *nuevoNodo){
 	if(arbol->padre){
 		//hay que asignarle su hijo del nodo a eliminar
-		if(arbol->dato == arbol->padre->izq->dato){
-			arbol->padre->izq=nuevoNodo;
-		}
-		else if(arbol->dato == arbol->padre->der->dato){
+		if(arbol->dato == arbol->padre->der->dato){
 			arbol->padre->der = nuevoNodo;
 		}
+		else if(arbol->dato == arbol->padre->izq->dato){
+			arbol->padre->izq = nuevoNodo;
+		}
 	}
-	if(nuevoNodo){
+	else if(nuevoNodo != NULL){
 		//se le asigna su nuevo padre
 		nuevoNodo->padre = arbol->padre;
 	}
@@ -437,28 +443,32 @@ void reemplazar(Nodo *arbol, Nodo *nuevoNodo){
 void destruir(Nodo *nodo){
 	nodo->izq = NULL;
 	nodo->der=NULL;
-	
 	delete nodo;
 }
 
 //funcion para eliminar el nodo encontrado
 void eliminar(Nodo *nodoEliminar){
-	if(nodoEliminar->izq  && nodoEliminar->der ){
+	if(nodoEliminar->izq != NULL && nodoEliminar->der != NULL){//si tiene dos hijos
 		Nodo *menor = minimo(nodoEliminar->der);
 		nodoEliminar->dato = menor->dato;
 		eliminar(menor);
+		//cout<<endl<<"Se elimina el nodo con dos hijos"<<endl;
 	}
-	else if(nodoEliminar->izq){//si solo tiene hijo izquierdo
+	else if(nodoEliminar->izq && nodoEliminar->der == NULL){//si solo tiene hijo izquierdo
 		reemplazar(nodoEliminar, nodoEliminar->izq);
 		destruir(nodoEliminar);
+		//cout<<endl<<"Se elimina el nodo con hijo izquierdo"<<endl;
 	}
-	else if(nodoEliminar->der){//si tiene solo hijo izquierdo
+	else if(nodoEliminar->der && nodoEliminar->izq == NULL){//si tiene solo hijo izquierdo
 		reemplazar(nodoEliminar, nodoEliminar->der);
 		destruir(nodoEliminar);
+		//cout<<endl<<"Se elimina el nodo con hijo derecho"<<endl;
 	}
-	else{//si no tieje hijos
+	else if(nodoEliminar->der == NULL && nodoEliminar->izq == NULL){//si no tieje hijos
 		reemplazar(nodoEliminar, NULL);
+		//cout<<endl<<"Se elimina el nodo hoja"<<endl;
 		destruir(nodoEliminar);
+		
 	}
 	
 }
